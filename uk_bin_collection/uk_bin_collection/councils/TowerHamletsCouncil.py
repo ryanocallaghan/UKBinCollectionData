@@ -79,10 +79,14 @@ class AchieveFormsSession:
 
 def with_year(day_month, today):
     """'05 October' -> the next such date (dates are listed without a year)."""
-    parsed = datetime.strptime(f"{day_month} {today.year}", "%d %B %Y").date()
-    if parsed < today - timedelta(days=31):
-        parsed = parsed.replace(year=today.year + 1)
-    return parsed
+    for year in (today.year, today.year + 1):
+        try:
+            parsed = datetime.strptime(f"{day_month} {year}", "%d %B %Y").date()
+        except ValueError:  # 29 February outside a leap year
+            continue
+        if parsed >= today - timedelta(days=31):
+            return parsed
+    raise ValueError(f"Unparseable collection date {day_month!r}")
 
 
 class CouncilClass(AbstractGetBinDataClass):

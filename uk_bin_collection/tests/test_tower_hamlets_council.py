@@ -106,3 +106,7 @@ def test_no_dates_or_time_bands_is_an_error():
 def test_dates_without_a_year_roll_into_next_year():
     assert with_year("04 January", date(2026, 12, 28)) == date(2027, 1, 4)
     assert with_year("28 December", date(2026, 12, 28)) == date(2026, 12, 28)
+
+
+def test_29_february_is_found_in_the_next_leap_year():
+    assert with_year("29 February", date(2027, 12, 20)) == date(2028, 2, 29)
